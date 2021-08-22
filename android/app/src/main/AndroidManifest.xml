@@ -1,10 +1,16 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.untitled">
-   <application
+
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION" />
+    <uses-permission android:name="android.permission.INTERNET"/>
+
+    <application
         android:label="untitled"
         android:icon="@mipmap/ic_launcher">
        <meta-data android:name="com.google.android.geo.API_KEY"
-           android:value="AIzaSyABaPaAeZXhRLax3OJ9TvYhtK-QGCDuikM"/>
+           android:value="AIzaSyDo82m38WAJsOHIj-iaOrZSac_R5BmMpJo"/>
         <activity
             android:name=".MainActivity"
             android:launchMode="singleTop"
