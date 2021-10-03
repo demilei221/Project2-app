@@ -4,13 +4,45 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:geolocator/geolocator.dart';
 import 'dart:convert';
 import 'dart:async';
+import 'package:http/http.dart' as http;
+import 'dart:convert' as convert;
 
-class MapSample extends StatefulWidget {
+class Location extends StatefulWidget {
+  Location({Key? key, required this.address, required this.county, required this.state, required this.zip_code, required this.business_type}): super(key:key);
+  final String address, county, state, zip_code, business_type;
   @override
-  State<MapSample> createState() => MapSampleState();
+  State<Location> createState() => LocationState();
 }
 
-class MapSampleState extends State<MapSample> {
+class LocationState extends State<Location> {
+  Map<String, String> _states = Map();
+
+
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    states();
+  }
+
+  void states() async {
+    // This example uses the Google Books API to search for books about http.
+    // https://developers.google.com/books/docs/overview
+    var url =
+    Uri.parse('http://10.0.2.2:5000/${widget.address}/${widget.county}/${widget.state}/${widget.zip_code}/${widget.business_type}');
+
+    // Await the http get response, then decode the json-formatted response.
+    var response = await http.get(url);
+    if (response.statusCode == 200) {
+      var jsonResponse = convert.jsonDecode(response.body);
+      print(jsonResponse);
+      setState(() {
+        _states = jsonResponse;
+      });
+    } else {
+      print('Request failed with status: ${response.statusCode}.');
+    }
+  }
+
   late GoogleMapController mapController;
 
   late LatLng _center = const LatLng(34, -118);
@@ -25,7 +57,7 @@ class MapSampleState extends State<MapSample> {
     mapController = controller;
   }
 
-  MapSampleState() {
+  LocationState() {
     Geolocator()
         .getCurrentPosition(desiredAccuracy: LocationAccuracy.high)
         .then((position) {
@@ -33,7 +65,7 @@ class MapSampleState extends State<MapSample> {
       print(position.longitude);
       print(position.latitude);
       myPosition = position;
-      var newPos = LatLng(34.0766,-118.1050);
+      var newPos = LatLng(position.latitude,position.longitude);
       CameraUpdate u2 = CameraUpdate.newCameraPosition(CameraPosition(
         target: newPos,
         zoom: 15,
@@ -47,10 +79,7 @@ class MapSampleState extends State<MapSample> {
     });
   }
 
-  @override
-  void initState() {
-    super.initState();
-  }
+
 
   void setCustomMapPin(context) {
     if (pinLocationIcon ==null) {
@@ -77,7 +106,7 @@ class MapSampleState extends State<MapSample> {
           title: mTitle,
           snippet: mDescription,
         ),
-        icon: BitmapDescriptor.defaultMarker ,
+        icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueAzure) ,
       ));
     });
   }

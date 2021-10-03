@@ -21,7 +21,7 @@ class _MyAppState extends State<MyApp> {
   Widget build(BuildContext context) {
     return new SplashScreen(
       seconds: 5,
-      navigateAfterSeconds: new MapSample(),
+      navigateAfterSeconds: RoutePage(),
       title: new Text(
         'Welcome In SplashScreen',
         style: new TextStyle(fontWeight: FontWeight.bold, fontSize: 20.0),

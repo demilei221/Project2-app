@@ -11,6 +11,8 @@
         android:icon="@mipmap/ic_launcher">
        <meta-data android:name="com.google.android.geo.API_KEY"
            android:value="AIzaSyDI-ZyPBaId0jQh8fLVrC4f89XNunOWqPk"/>
+        <meta-data android:name="io.flutter.network-policy"
+            android:resource="@xml/network_security_config"/>
 
         <activity
             android:name=".MainActivity"
