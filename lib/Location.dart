@@ -15,7 +15,7 @@ class Location extends StatefulWidget {
 }
 
 class LocationState extends State<Location> {
-  Map<String, String> _states = Map();
+  Map<String, dynamic> _states = Map();
 
 
   void initState() {
@@ -38,8 +38,34 @@ class LocationState extends State<Location> {
       setState(() {
         _states = jsonResponse;
       });
+      var newPos = LatLng(_states['latitude'],_states['longitude']);
+      CameraUpdate u2 = CameraUpdate.newCameraPosition(CameraPosition(
+        target: newPos,
+        zoom: 15,
+        // tilt: 59.440717697143555,
+      ));
+      mapController.animateCamera(u2);
+      addMarker(newPos, "You are here", "Look for you surroundings", BitmapDescriptor.hueRed);
+      addMarkersNearby();
+      addMarkersParking();
+
     } else {
       print('Request failed with status: ${response.statusCode}.');
+    }
+  }
+  void addMarkersNearby() {
+
+    //print(_states['near_by_place']);
+    for (int i = 0; i<_states['near_by_place'].length; i++){
+      var newPos = LatLng(_states['near_by_place'][i]['lat'],_states['near_by_place'][i]['lng']);
+      addMarker(newPos, _states['near_by_place'][i]['name'], double.parse(_states['near_by_place'][i]['distance']).toStringAsFixed(2) + ' miles', BitmapDescriptor.hueBlue);
+    }
+  }
+  void addMarkersParking() {
+    //print(_states['near_by_place']);
+    for (int i = 0; i<_states['parkings'].length; i++){
+      var newPos = LatLng(_states['parkings'][i]['lat'],_states['parkings'][i]['lng']);
+      addMarker(newPos, _states['parkings'][i]['name'], double.parse(_states['parkings'][i]['distance']).toStringAsFixed(2) + ' miles', BitmapDescriptor.hueMagenta);
     }
   }
 
@@ -56,7 +82,7 @@ class LocationState extends State<Location> {
   void _onMapCreated(GoogleMapController controller) {
     mapController = controller;
   }
-
+/*
   LocationState() {
     Geolocator()
         .getCurrentPosition(desiredAccuracy: LocationAccuracy.high)
@@ -78,7 +104,7 @@ class LocationState extends State<Location> {
 
     });
   }
-
+*/
 
 
   void setCustomMapPin(context) {
@@ -94,7 +120,7 @@ class LocationState extends State<Location> {
     }
   }
 
-  void addMarker(LatLng mLatLng, String mTitle, String mDescription) {
+  void addMarker(LatLng mLatLng, String mTitle, String mDescription, double iconColor) {
     print('add marker' + mTitle + "_" + mLatLng.toString());
     setState(() {
       _markers.add(Marker(
@@ -106,7 +132,7 @@ class LocationState extends State<Location> {
           title: mTitle,
           snippet: mDescription,
         ),
-        icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueAzure) ,
+        icon: BitmapDescriptor.defaultMarkerWithHue(iconColor) ,
       ));
     });
   }
@@ -118,6 +144,20 @@ class LocationState extends State<Location> {
       body: SingleChildScrollView(
         child: Column(
           children: [
+            Container(
+              height: 200,
+              width: MediaQuery.of(context).size.width,
+              color: Colors.blueGrey,
+              child:_states.isNotEmpty ? Padding(
+                padding: const EdgeInsets.all(20.0),
+                child: Column(
+                  children: [
+                    Text('Average income of this area: '  + _states['income_zip_code'], style: TextStyle(fontSize: 18))
+                  ],
+                ),
+              ):
+                  SizedBox(),
+            ),
             SizedBox(
               width: MediaQuery.of(context).size.width,  // or use fixed size like 200
               height: MediaQuery.of(context).size.height,
@@ -130,10 +170,7 @@ class LocationState extends State<Location> {
                 ),
               ),
             ),
-            Container(
-              height: 200,
-              color: Colors.red,
-            )
+
           ],
         ),
       ),
