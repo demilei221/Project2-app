@@ -31,7 +31,9 @@ class _MyAppState extends State<MyApp> {
           'assets/businessLogo copy.png'),
       backgroundColor: Colors.white,
       loaderColor: Colors.red,
+
       photoSize: 80,
+
     );
   }
 }
