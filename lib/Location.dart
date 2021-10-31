@@ -45,7 +45,7 @@ class LocationState extends State<Location> {
         // tilt: 59.440717697143555,
       ));
       mapController.animateCamera(u2);
-      addMarker(newPos, "You are here", "Look for you surroundings", BitmapDescriptor.hueRed);
+      addMarker(newPos, "your Location", "", BitmapDescriptor.hueRed);
       addMarkersNearby();
       addMarkersParking();
 

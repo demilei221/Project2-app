@@ -21,15 +21,17 @@ class _MyAppState extends State<MyApp> {
   Widget build(BuildContext context) {
     return new SplashScreen(
       seconds: 5,
-      navigateAfterSeconds: RoutePage(),
+      // navigateAfterSeconds: RoutePage(),
+      navigateAfterSeconds: InputPage(title: "Home"),
       title: new Text(
-        'Welcome In SplashScreen',
+        'Welcome',
         style: new TextStyle(fontWeight: FontWeight.bold, fontSize: 20.0),
       ),
-      image: new Image.network(
-          'https://flutter.io/images/catalog-widget-placeholder.png'),
+      image: new Image.asset(
+          'assets/businessLogo copy.png'),
       backgroundColor: Colors.white,
       loaderColor: Colors.red,
+      photoSize: 80,
     );
   }
 }
