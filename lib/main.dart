@@ -30,6 +30,7 @@ class _MyAppState extends State<MyApp> {
           'https://flutter.io/images/catalog-widget-placeholder.png'),
       backgroundColor: Colors.white,
       loaderColor: Colors.red,
+
     );
   }
 }
