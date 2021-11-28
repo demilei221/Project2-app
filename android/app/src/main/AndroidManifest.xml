@@ -3,12 +3,11 @@
 
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
-    <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION" />
     <uses-permission android:name="android.permission.INTERNET"/>
 
     <application
-        android:label="untitled"
-        android:icon="@mipmap/ic_launcher">
+        android:label="business info search"
+        android:icon="@mipmap/launcher_icon">
        <meta-data android:name="com.google.android.geo.API_KEY"
            android:value="AIzaSyDI-ZyPBaId0jQh8fLVrC4f89XNunOWqPk"/>
         <meta-data android:name="io.flutter.network-policy"

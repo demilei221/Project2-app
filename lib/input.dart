@@ -1,8 +1,10 @@
+//input
 import 'package:flutter/material.dart';
 import 'dart:convert' as convert;
 import 'package:http/http.dart' as http;
 import 'Location.dart';
 import 'package:custom_searchable_dropdown/custom_searchable_dropdown.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class InputPage extends StatefulWidget {
   InputPage({Key? key, required this.title}) : super(key: key);
@@ -15,7 +17,6 @@ class InputPage extends StatefulWidget {
 
 class _InputPageState extends State<InputPage> {
   TextEditingController Business = TextEditingController();
-  TextEditingController County = TextEditingController();
   TextEditingController Address = TextEditingController();
   TextEditingController zip = TextEditingController();
   List<String> _states = [];
@@ -24,11 +25,26 @@ class _InputPageState extends State<InputPage> {
   String? dropdownState;
   String? _selectedValue;
 
+
+
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
     states();
+  }
+
+  Future<void> store() async {
+    Map info = new Map();
+    info["Business"] = Business.text;
+    info["Address"] = Address.text;
+    info["Zip"] = zip.text;
+    info["County"] = dropdownCounty;
+    info["State"] = dropdownState;
+    SharedPreferences _prefs = await SharedPreferences.getInstance();
+    List<String> history = _prefs.getStringList('history') ?? [];
+    history.add(convert.jsonEncode(info));
+    _prefs.setStringList("history", history);
   }
 
   @override
@@ -43,7 +59,7 @@ class _InputPageState extends State<InputPage> {
           child: ListView(
             // mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
-              Padding(
+              Padding( //type of business
                 padding: const EdgeInsets.all(8.0),
                 child: TextField(
                   controller: Business,
@@ -53,7 +69,7 @@ class _InputPageState extends State<InputPage> {
                   ),
                 ),
               ),
-              Padding(
+              Padding( // address
                 padding: const EdgeInsets.all(8.0),
                 child: TextField(
                   controller: Address,
@@ -63,7 +79,7 @@ class _InputPageState extends State<InputPage> {
                   ),
                 ),
               ),
-              Padding(
+              Padding( //zip code
                 padding: const EdgeInsets.all(8.0),
                 child: TextField(
                   controller: zip,
@@ -73,7 +89,7 @@ class _InputPageState extends State<InputPage> {
                   ),
                 ),
               ),
-              Padding(
+              Padding( // states
                 padding: EdgeInsets.all(8),
                 child: CustomSearchableDropDown(
                   items: _states,
@@ -100,7 +116,7 @@ class _InputPageState extends State<InputPage> {
                   },
                 ),
               ),
-              Padding(
+              Padding( //county
                 padding: EdgeInsets.all(8),
                 child: CustomSearchableDropDown(
                   items: _county,
@@ -129,11 +145,11 @@ class _InputPageState extends State<InputPage> {
                 // style: style,
                 onPressed: () {
                   // Within the `FirstRoute` widget
-
-                  Navigator.push(
+                  store();
+                  Navigator.push( //connect to different screen
                     context,
-                    MaterialPageRoute(
-                        builder: (context) => Location(
+                    MaterialPageRoute( //connect different route
+                        builder: (context) => Location( //build Location
                             address: Address.text,
                             county: dropdownCounty!,
                             state: dropdownState!,
@@ -153,8 +169,8 @@ class _InputPageState extends State<InputPage> {
   void states() async {
     // This example uses the Google Books API to search for books about http.
     // https://developers.google.com/books/docs/overview
-    var url = Uri.parse('http://10.0.2.2:5000/States');
-
+    var url = Uri.parse('http://18.118.105.155/States');
+    // var url = Uri.parse('http://10.0.2.2:5000/States');
     // Await the http get response, then decode the json-formatted response.
     var response = await http.get(url);
     if (response.statusCode == 200) {
@@ -171,8 +187,8 @@ class _InputPageState extends State<InputPage> {
   void county() async {
     // This example uses the Google Books API to search for books about http.
     // https://developers.google.com/books/docs/overview
-    var url = Uri.parse('http://10.0.2.2:5000/${dropdownState}');
-
+    var url = Uri.parse('http://18.118.105.155/${dropdownState}');
+    // var url = Uri.parse('http://10.0.2.2:5000/${dropdownState}');
     // Await the http get response, then decode the json-formatted response.
     var response = await http.get(url);
     if (response.statusCode == 200) {
