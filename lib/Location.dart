@@ -8,6 +8,8 @@ import 'dart:async';
 import 'package:http/http.dart' as http;
 import 'dart:convert' as convert;
 
+import 'package:untitled/Result.dart';
+
 class Location extends StatefulWidget {
   Location(
       {Key? key,
@@ -35,7 +37,8 @@ class LocationState extends State<Location> {
     // This example uses the Google Books API to search for books about http.
     // https://developers.google.com/books/docs/overview
     var url = //local host
-        Uri.parse('http://18.118.105.155/${widget.address}/${widget.county}/${widget.state}/${widget.zip_code}/${widget.business_type}');
+        Uri.parse(
+            'http://18.118.105.155/${widget.address}/${widget.county}/${widget.state}/${widget.zip_code}/${widget.business_type}');
 
     // Await the http get response, then decode the json-formatted response.
     var response = await http.get(url);
@@ -157,107 +160,38 @@ class LocationState extends State<Location> {
   Widget build(BuildContext context) {
     // setCustomMapPin(context);
     return Scaffold(
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            Container(
-              height: 200,
-              width: MediaQuery.of(context).size.width,
-              color: Color.fromRGBO(255, 255, 255, 0.5),
-              child: _serverInfo.isNotEmpty
-                  ? Padding(
-                      padding: const EdgeInsets.all(20.0),
-                      child: ListView(
-                        children: [
-                          Text(
-                              'Average income of this area: \$' +
-                                  _serverInfo['income_zip_code'],
-                              style: TextStyle(fontSize: 18)),
-                          Text(
-                              'Average income of this county: \$' +
-                                  _serverInfo['income_county'],
-                              style: TextStyle(fontSize: 18)),
-                          Text(
-                              'Poverty Rate: ' +
-                                  _serverInfo['poverty_county'] +
-                                  "%",
-                              style: TextStyle(fontSize: 18)),
-                          SizedBox(height: 5),
-                          Text('Demographic: ', style: TextStyle(fontSize: 18)),
-                          Text(
-                              "                        Hispanic: " +
-                                  _serverInfo['demographic']['hispanic'] +
-                                  "%",
-                              style: TextStyle(fontSize: 18)),
-                          Text(
-                              "                        White: " +
-                                  _serverInfo['demographic']['white'] +
-                                  "%",
-                              style: TextStyle(fontSize: 18)),
-                          Text(
-                              "                        African American: " +
-                                  _serverInfo['demographic']['black'] +
-                                  "%",
-                              style: TextStyle(fontSize: 18)),
-                          Text(
-                              "                        Asian: " +
-                                  _serverInfo['demographic']['asian'] +
-                                  "%",
-                              style: TextStyle(fontSize: 18)),
-                          Text(
-                              "                        Pacific Islander: " +
-                                  _serverInfo['demographic']['pacific'] +
-                                  "%",
-                              style: TextStyle(fontSize: 18)),
-                          SizedBox(height: 5),
-                          Text('Transportation: ',
-                              style: TextStyle(fontSize: 18)),
-                          _serverInfo['walkscore'] != null
-                          ? Text(
-                              "                        Walk: " +
-                                  _serverInfo['walkscore'].toString() +
-                                  ' - ' +
-                                  _serverInfo['description'],
-                              style: TextStyle(fontSize: 18))
-                          : SizedBox(),
-                          _serverInfo['bikescore'] != null
-                          ? Text(
-                              "                        Bike: " +
-                                  _serverInfo['bikescore'].toString() +
-                                  ' - ' +
-                                  _serverInfo['bikeDescription'],
-                              style: TextStyle(fontSize: 18))
-                          : SizedBox(),
-                          _serverInfo['transitscore'] != null
-                              ? Text(
-                                  "                        Transport: " +
-                                      _serverInfo['transitscore'].toString() +
-                                      ' - ' +
-                                      _serverInfo['transitDescription'],
-                                  style: TextStyle(fontSize: 18))
-                              : SizedBox()
-                        ],
-                      ),
-                    )
-                  : SizedBox(),
-            ),
-            SizedBox(
-              width: MediaQuery.of(context)
-                  .size
-                  .width, // or use fixed size like 200
-              height: MediaQuery.of(context).size.height,
-              child: GoogleMap(
-                markers: _markers,
-                onMapCreated: _onMapCreated,
-                initialCameraPosition: CameraPosition(
-                  target: _center,
-                  zoom: 15.0,
-                ),
+      appBar: AppBar(title: const Text('Maps'), actions: <Widget>[
+        IconButton(
+          icon: const Icon(Icons.assessment_outlined),
+          tooltip: '',
+          onPressed: () {
+            Navigator.push(
+                //connect to different screen
+                context,
+                MaterialPageRoute(
+                  //connect different route
+                  builder: (context) => Result(
+                      //build Location
+                      title: "",
+                      serverInfo: _serverInfo),
+                ));
+          },
+        ),
+      ]),
+      body:
+          SizedBox(
+            width:
+                MediaQuery.of(context).size.width, // or use fixed size like 200
+            height: MediaQuery.of(context).size.height,
+            child: GoogleMap(
+              markers: _markers,
+              onMapCreated: _onMapCreated,
+              initialCameraPosition: CameraPosition(
+                target: _center,
+                zoom: 15.0,
               ),
             ),
-          ],
-        ),
-      ),
+          ),
     );
   }
 }

@@ -2,6 +2,7 @@
 import 'package:flutter/material.dart';
 import 'package:splashscreen/splashscreen.dart';
 import 'package:untitled/Location.dart';
+import 'package:untitled/Result.dart';
 import 'package:untitled/input.dart';
 
 import 'Route.dart';
